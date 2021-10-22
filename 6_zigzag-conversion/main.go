@@ -46,6 +46,11 @@ func convert(s string, numRows int) string {
 	var hash [1000]string
 	var way, p int
 	way = -1
+
+	if numRows==1 {
+		return s
+	}
+
 	for n, v := range s {
 		hash[p] = hash[p] + string(v)
 		if n % (numRows-1) == 0 {

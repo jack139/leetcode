@@ -36,13 +36,58 @@ lnum = round((n-l)/((r-1)*2))+1  首尾行
 4 5 6 7 8 9  10
 11  12  13
 
+0       8		0 0	 4  k=4	4=4 - 0
+1     7 9		0 3     k=3	3=4 - 1
+2   6   10 		0 2     k=2	2=4 - 2
+3 5     11 13	0 1     k=1 1=4 - 3
+4		12		0 0     k=0	0=4 - 4
+
 pos = 
 
 PINALSIGYAHRPI
-PINALSIGYAHRPI
+02468AC13579BD
+048C13579BD26A
+06C157BD248A39
+0817926A35BD4C
+
 */
 
 func convert(s string, numRows int) string {
+	var s2 [1000]byte
+
+	if numRows==1 {
+		return s
+	}
+
+	l := len(s)
+	r := 0
+	k := numRows - 1 - r
+	n := 0
+	for i:=0;i<l;i++ {
+		//fmt.Println("\n",i,r,k,n)
+		if n*(numRows-1)*2+r > l-1 {
+			r++
+			k = numRows - 1 - r
+			n = 0
+		}
+		if n*(numRows-1)*2+r < l {
+			s2[i] = s[n*(numRows-1)*2+r]
+			//fmt.Printf("\n; i=%d, r=%d, k=%d, n=%d, s[]=%c", i, r, k, n, s[n*(numRows-1)*2+r])
+		}
+		if k%(numRows-1)!=0 {
+			if (n*(numRows-1)+k)*2+r < l {
+				i++
+				s2[i] = s[(n*(numRows-1)+k)*2+r]
+				//fmt.Printf("\n, i=%d, r=%d, k=%d, n=%d, s[]=%c", i, r, k, n, s[(n*(numRows-1)+k)*2+r])
+			}
+		}
+		n++
+	}
+
+	return string(s2[:l])
+}
+
+func convert2(s string, numRows int) string {
 	var hash [1000]string
 	var way, p int
 	way = -1
@@ -73,4 +118,8 @@ func convert(s string, numRows int) string {
 
 func main(){
 	fmt.Println(convert("PAYPALISHIRING", 4))
+	fmt.Println(convert("0123456789ABCD", 2))
+	fmt.Println(convert("0123456789ABCD", 3))
+	fmt.Println(convert("0123456789ABCD", 4))
+	fmt.Println(convert("0123456789ABCD", 5))
 }

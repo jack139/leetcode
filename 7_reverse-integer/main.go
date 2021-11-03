@@ -7,11 +7,10 @@ import (
 // 32-bit integer range [-2^31, 2^31 - 1]  [-2147483648, 2147483647]
 
 func reverse(x int) int {
-	var n, d int
+	var n int
 
 	for x!=0 {
-		d = x - x/10*10
-		n = n*10 + d
+		n = n*10 + x%10
 		x = x/10
 	}
 

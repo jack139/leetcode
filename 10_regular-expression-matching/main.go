@@ -7,9 +7,9 @@ import (
 
 func isMatch(s string, p string) bool {
 	var (
-		star, last_star bool
+		star, fail bool
 		ps, pp, plen, slen int
-		char byte
+		char, last_char byte
 	)
 
 	fmt.Printf("%s\t%s\t", s, p)
@@ -24,28 +24,41 @@ func isMatch(s string, p string) bool {
 			star = true
 			pp++
 		}
-		if ps==slen && !last_star { return false }
+		if ps==slen { 
+			//fmt.Println(ps, slen, pp, plen)
+			fail = true
+		}
 		for ps < slen {
-			if char=='.' { ps++ } else if s[ps]==char { ps++ } else { break }
+			if char=='.' { 
+				last_char=s[ps]
+				ps++ 
+			} else if s[ps]==char { 
+				last_char=s[ps]
+				ps++ 
+			} else { break }
 			if !star { break }
 		}
+		//fmt.Println(star, ps, slen, pp, plen)
 		if star {
 			last_pp := pp
 			for pp<plen {
-				if p[pp]==char || char=='.' { pp++ } else { break }
+				fmt.Printf("%c %c %c\n", last_char, char, p[pp])
+				fmt.Println(star, ps, slen, pp, plen)
+				if p[pp]==char ||char=='.' { pp++ } else { break }
 			}
 			if last_pp!=pp {
 				if ps-(pp-last_pp)<0 { return false }
+				//fmt.Println(p[last_pp:pp], s[ps-(pp-last_pp):ps])
 				if p[last_pp:pp]!=s[ps-(pp-last_pp):ps] { return false }
 			}
-			last_star = true
-		} else { last_star = false }
+			fail = false
+		}
 		star = false
 	}
 
 	//fmt.Println(ps, slen, pp, plen)
 
-	return ps==slen && pp==plen
+	return ps==slen && pp==plen && !fail
 }
 
 func main(){	

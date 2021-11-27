@@ -5,7 +5,7 @@ import (
 )
 
 
-func isMatch(s string, p string) bool {
+func isMatch1(s string, p string) bool {
 	var (
 		star, fail bool
 		ps, pp, plen, slen int
@@ -59,6 +59,43 @@ func isMatch(s string, p string) bool {
 	//fmt.Println(ps, slen, pp, plen)
 
 	return ps==slen && pp==plen && !fail
+}
+
+func isMatch(s string, p string) bool {
+	var pp, sp int
+	var char byte
+
+	dp := make([][]bool, len(p)+1)
+	for i := range dp {
+		dp[i] = make([]bool, len(s)+1)
+	}
+	dp[0][0] = true
+	
+	for i := range p {
+		if p[i] == '*' {
+			pp = i+1
+			dp[pp][0] = dp[pp-2][0]
+		}
+	}
+	
+	for j := 0; j < len(p); j++ {
+		pp = j+1
+		char = p[j]
+		
+		for i := 0; i < len(s); i++ {
+			sp = i+1
+			
+			if char == '*' {
+				dp[pp][sp] = dp[pp-2][sp] || (s[i] == p[j-1] || p[j-1] == '.') && dp[pp][sp-1]
+			} else if char == '.' {
+				dp[pp][sp] = dp[pp-1][sp-1]
+			} else {
+				dp[pp][sp] = s[i] == p[j] && dp[pp-1][sp-1]
+			}
+		}
+	}   
+	
+	return dp[len(p)][len(s)]
 }
 
 func main(){	

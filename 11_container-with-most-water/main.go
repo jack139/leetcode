@@ -5,7 +5,7 @@ import (
 )
 
 
-func maxArea(height []int) int {
+func maxArea0(height []int) int {
 	var maxA, tmpA int
 	var hash map[int]int
 	hash = make(map[int]int)
@@ -30,6 +30,27 @@ func maxArea(height []int) int {
 		}
 	}
 	return maxA
+}
+
+func maxArea(height []int) int {
+	max, s, e := 0, 0, len(height)-1
+	for s < e {
+		w := e - s
+		h := 0
+		if height[s] < height[e] {
+			h = height[s]
+			s++
+		} else {
+			h = height[e]
+			e--
+		}
+
+		tmp := w * h
+		if tmp > max {
+			max = tmp
+		}
+	}
+	return max
 }
 
 /*
